@@ -1,0 +1,12 @@
+{
+  "domain": "myopen",
+  "name": "myOpen",
+  "codeowners": ["@tonigarcia"],
+  "config_flow": true,
+  "documentation": "https://github.com/tonigarcia/ha-myopen",
+  "integration_type": "hub",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/tonigarcia/ha-myopen/issues",
+  "requirements": [],
+  "version": "1.0.0"
+}

@@ -1,0 +1,31 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "myOpen",
+        "description": "Introduce el número de móvil registrado en myOpen. Recibirás un código de activación por SMS.",
+        "data": {
+          "tel": "Número de teléfono",
+          "lang": "Idioma",
+          "verify_ssl": "Verificar certificado SSL"
+        }
+      },
+      "sms": {
+        "title": "Código de activación",
+        "description": "Introduce el código enviado por SMS a {tel}.",
+        "data": {
+          "pin": "Código SMS"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "No se pudo contactar con el servicio myOpen.",
+      "invalid_auth": "La solicitud de registro fue rechazada.",
+      "invalid_code": "El código SMS no es válido. Solicita uno nuevo.",
+      "service_error": "El servicio devolvió un error."
+    },
+    "abort": {
+      "already_configured": "Este número de teléfono ya está configurado."
+    }
+  }
+}

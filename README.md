@@ -47,7 +47,7 @@ Campos comunes en cada petición: `tel`, `iddisp` (UUID generado una vez),
 
 1. En Home Assistant: **HACS → ⋮ (arriba a la derecha) → Repositorios
    personalizados**.
-2. Pega la URL de este repositorio (`https://github.com/tonigarcia/ha-myopen`)
+2. Pega la URL de este repositorio (`https://github.com/zoltyvigo/ha-myopen`)
    y en "Categoría" elige **Integration**. Pulsa **Añadir**.
 3. Busca **"myOpen"** en HACS, ábrelo y pulsa **Descargar**.
 4. **Reinicia Home Assistant**.

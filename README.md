@@ -67,28 +67,23 @@ Las actualizaciones aparecerán en HACS cada vez que publiques una nueva
 
 ## Icono / logo de la integración
 
-Home Assistant **no** carga el logo desde `custom_components/`: lo busca por
-dominio en el repositorio central [`home-assistant/brands`](https://github.com/home-assistant/brands)
-(`https://brands.home-assistant.io/myopen/icon.png`). Para que aparezca el
-icono de myOpen hay que enviar un PR a ese repo.
-
-En la carpeta `brands/` de este repositorio tienes los ficheros ya preparados:
+Desde **Home Assistant 2026.3** las integraciones personalizadas pueden incluir
+su propio icono directamente, sin pasar por el repositorio `home-assistant/brands`
+(que ya **no acepta** iconos de integraciones personalizadas). El icono va en una
+carpeta `brand/` dentro de la integración y tiene prioridad sobre la CDN:
 
 ```
-brands/custom_integrations/myopen/icon.png      (256x256)
-brands/custom_integrations/myopen/icon@2x.png   (512x512)
+custom_components/myopen/brand/icon.png      (256x256)
+custom_components/myopen/brand/icon@2x.png   (512x512)
 ```
 
-Pasos del PR:
+Como el icono de myOpen es cuadrado, solo se incluye el icono (no hace falta
+`logo.png`). No requiere ningún cambio en `manifest.json`. Se muestra tras
+reiniciar Home Assistant.
 
-1. Haz un fork de `home-assistant/brands`.
-2. Copia la carpeta `custom_integrations/myopen/` (con los dos PNG) a la raíz
-   del fork.
-3. Crea el PR. Una vez aceptado y desplegado en la CDN de brands, HA y HACS
-   mostrarán el icono automáticamente (puede tardar un poco en propagarse).
-
-Hasta que el PR esté aceptado, la integración funciona igual pero sin logo
-propio; las entidades de puerta ya usan el icono `mdi:door-open`.
+> Requiere HA 2026.3 o superior. En versiones anteriores este método no existe
+> y se vería "icon not available"; la integración funciona igual en cualquier
+> caso (las entidades de puerta usan `mdi:door-open`).
 
 ## Publicar versiones (para que HACS detecte actualizaciones)
 

@@ -1,6 +1,7 @@
 """Coordinator: keeps the door list in sync via ValidarCodigoActivacion."""
 from __future__ import annotations
 
+import asyncio
 import logging
 
 from homeassistant.config_entries import ConfigEntry
@@ -24,6 +25,9 @@ from .const import (
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+# Seconds to wait before the single retry on a transient open failure.
+OPEN_RETRY_DELAY = 3
 
 
 class MyOpenCoordinator(DataUpdateCoordinator[list[dict[str, str]]]):
@@ -58,7 +62,30 @@ class MyOpenCoordinator(DataUpdateCoordinator[list[dict[str, str]]]):
             raise UpdateFailed(str(err)) from err
 
     async def async_open_door(self, door_id: str) -> None:
-        """Open a door by its ecobox id."""
+        """Open a door by its ecobox id.
+
+        Retries once after a short wait on transient failures (server/door
+        connectivity). Does not retry when the registration is invalid
+        (MyOpenAuthError), since that needs re-validation. Raises
+        MyOpenApiError / MyOpenError on failure; callers format the message.
+        """
+        try:
+            await self._abrir(door_id)
+            return
+        except MyOpenAuthError:
+            raise
+        except MyOpenError as first_err:
+            _LOGGER.debug(
+                "Open of door %s failed (%s); retrying once in %ss",
+                door_id,
+                first_err,
+                OPEN_RETRY_DELAY,
+            )
+
+        await asyncio.sleep(OPEN_RETRY_DELAY)
+        await self._abrir(door_id)
+
+    async def _abrir(self, door_id: str) -> None:
         await self.client.abrir_puerta(
             idprop=self.entry.data[CONF_IDPROP],
             idactiv=self.entry.data[CONF_IDACTIV],

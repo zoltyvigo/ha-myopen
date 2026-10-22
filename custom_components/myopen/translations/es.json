@@ -27,5 +27,16 @@
     "abort": {
       "already_configured": "Este número de teléfono ya está configurado."
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opciones de myOpen",
+        "description": "Mensaje que se muestra cuando una puerta no se puede abrir. Comodines disponibles: {door} (nombre de la puerta), {error} (mensaje del servicio), {code} (código de resultado).",
+        "data": {
+          "error_template": "Plantilla del mensaje de error"
+        }
+      }
+    }
   }
 }

@@ -9,8 +9,13 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from . import MyOpenConfigEntry
-from .api import MyOpenError
-from .const import CONF_TEL, DOMAIN
+from .api import MyOpenApiError, MyOpenError
+from .const import (
+    CONF_ERROR_TEMPLATE,
+    CONF_TEL,
+    DEFAULT_ERROR_TEMPLATE,
+    DOMAIN,
+)
 from .coordinator import MyOpenCoordinator
 
 
@@ -75,5 +80,25 @@ class MyOpenDoorButton(CoordinatorEntity[MyOpenCoordinator], ButtonEntity):
         """Open the door."""
         try:
             await self.coordinator.async_open_door(self._door_id)
+        except MyOpenApiError as err:
+            raise HomeAssistantError(
+                self._format_error(str(err), err.code)
+            ) from err
         except MyOpenError as err:
-            raise HomeAssistantError(f"Failed to open door: {err}") from err
+            raise HomeAssistantError(self._format_error(str(err), None)) from err
+
+    def _format_error(self, error_text: str, code: int | None) -> str:
+        """Build the user-facing error message from the options template."""
+        template = self.coordinator.entry.options.get(
+            CONF_ERROR_TEMPLATE, DEFAULT_ERROR_TEMPLATE
+        )
+        values = {
+            "door": self.name,
+            "error": error_text,
+            "code": "" if code is None else code,
+        }
+        try:
+            return template.format(**values)
+        except (KeyError, IndexError, ValueError):
+            # Fall back to the default if the custom template is malformed.
+            return DEFAULT_ERROR_TEMPLATE.format(**values)

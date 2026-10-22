@@ -27,5 +27,16 @@
     "abort": {
       "already_configured": "This phone number is already configured."
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "myOpen options",
+        "description": "Message shown when a door fails to open. Available placeholders: {door} (door name), {error} (service message), {code} (result code).",
+        "data": {
+          "error_template": "Error message template"
+        }
+      }
+    }
   }
 }

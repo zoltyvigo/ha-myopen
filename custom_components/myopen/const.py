@@ -49,5 +49,10 @@ CONF_LANG = "lang"
 CONF_VERIFY_SSL = "verify_ssl"
 CONF_DOORS = "doors"       # cached list [{id, nombre}] from validation
 
+# --- Options ----------------------------------------------------------
+CONF_ERROR_TEMPLATE = "error_template"
+# Placeholders: {door} = door name, {error} = service message, {code} = result code
+DEFAULT_ERROR_TEMPLATE = "No se pudo abrir «{door}»: {error}"
+
 # How often to refresh the door list (ValidarCodigoActivacion).
 SCAN_INTERVAL = timedelta(hours=6)

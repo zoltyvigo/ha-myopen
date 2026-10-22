@@ -6,7 +6,13 @@ from typing import Any
 
 import voluptuous as vol
 
-from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
+from homeassistant.config_entries import (
+    ConfigEntry,
+    ConfigFlow,
+    ConfigFlowResult,
+    OptionsFlow,
+)
+from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api import (
@@ -16,6 +22,7 @@ from .api import (
     MyOpenError,
 )
 from .const import (
+    CONF_ERROR_TEMPLATE,
     CONF_IDACTIV,
     CONF_IDDISP,
     CONF_IDPROP,
@@ -23,6 +30,7 @@ from .const import (
     CONF_PIN,
     CONF_TEL,
     CONF_VERIFY_SSL,
+    DEFAULT_ERROR_TEMPLATE,
     DEFAULT_LANG,
     DOMAIN,
     F_IDACTIV,
@@ -34,6 +42,12 @@ class MyOpenConfigFlow(ConfigFlow, domain=DOMAIN):
     """Two-step flow mirroring the mobile app's activation."""
 
     VERSION = 1
+
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry: ConfigEntry) -> OptionsFlow:
+        """Return the options flow handler."""
+        return MyOpenOptionsFlow()
 
     def __init__(self) -> None:
         self._tel: str = ""
@@ -145,3 +159,31 @@ class MyOpenConfigFlow(ConfigFlow, domain=DOMAIN):
     def _set_desc(self, err: Exception) -> None:
         """Store last error text (shown via logs)."""
         self.context["last_error"] = str(err)
+
+
+class MyOpenOptionsFlow(OptionsFlow):
+    """Options: customise the error message shown when a door fails to open."""
+
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        if user_input is not None:
+            return self.async_create_entry(title="", data=user_input)
+
+        current = self.config_entry.options.get(
+            CONF_ERROR_TEMPLATE, DEFAULT_ERROR_TEMPLATE
+        )
+        schema = vol.Schema(
+            {
+                vol.Optional(CONF_ERROR_TEMPLATE, default=current): str,
+            }
+        )
+        return self.async_show_form(
+            step_id="init",
+            data_schema=schema,
+            description_placeholders={
+                "door": "{door}",
+                "error": "{error}",
+                "code": "{code}",
+            },
+        )

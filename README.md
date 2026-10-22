@@ -54,9 +54,6 @@ Campos comunes en cada petición: `tel`, `iddisp` (UUID generado una vez),
 5. **Ajustes → Dispositivos y servicios → Añadir integración → "myOpen"** y
    sigue los dos pasos (teléfono y código SMS).
 
-Las actualizaciones aparecerán en HACS cada vez que publiques una nueva
-**Release** en GitHub (ver "Publicar versiones" más abajo).
-
 ### Opción B — Manual
 
 1. Copia la carpeta `custom_components/myopen` dentro de la carpeta
@@ -64,41 +61,6 @@ Las actualizaciones aparecerán en HACS cada vez que publiques una nueva
 2. Reinicia Home Assistant.
 3. **Ajustes → Dispositivos y servicios → Añadir integración → "myOpen"**.
 4. Sigue los dos pasos (teléfono y código SMS).
-
-## Icono / logo de la integración
-
-Desde **Home Assistant 2026.3** las integraciones personalizadas pueden incluir
-su propio icono directamente, sin pasar por el repositorio `home-assistant/brands`
-(que ya **no acepta** iconos de integraciones personalizadas). El icono va en una
-carpeta `brand/` dentro de la integración y tiene prioridad sobre la CDN:
-
-```
-custom_components/myopen/brand/icon.png      (256x256)
-custom_components/myopen/brand/icon@2x.png   (512x512)
-```
-
-Como el icono de myOpen es cuadrado, solo se incluye el icono (no hace falta
-`logo.png`). No requiere ningún cambio en `manifest.json`. Se muestra tras
-reiniciar Home Assistant.
-
-> Requiere HA 2026.3 o superior. En versiones anteriores este método no existe
-> y se vería "icon not available"; la integración funciona igual en cualquier
-> caso (las entidades de puerta usan `mdi:door-open`).
-
-## Publicar versiones (para que HACS detecte actualizaciones)
-
-HACS usa las **Releases/tags de GitHub**, no el número del `manifest.json`.
-Para publicar una actualización:
-
-1. Sube tus cambios y **sube también** el `version` del `manifest.json`
-   (por ejemplo `1.0.1`).
-2. Crea una release en GitHub con un tag igual, p. ej. `v1.0.1`
-   (o `1.0.1`). Desde la web: **Releases → Draft a new release**, o por consola:
-   ```bash
-   git tag v1.0.1 && git push origin v1.0.1
-   ```
-3. En unas horas (o forzando refresco en HACS) aparecerá el botón de
-   actualizar en la tarjeta de la integración dentro de HACS.
 
 ## Uso en automatizaciones
 
@@ -113,6 +75,13 @@ action:
 
 Y una pulsación del botón puede usarse como *disparador* de otras
 automatizaciones con el trigger de estado del botón.
+
+## Opciones
+
+En **Ajustes → Dispositivos y servicios → myOpen → Configurar** puedes
+personalizar el mensaje de error que se muestra cuando una puerta no se abre,
+con los comodines `{door}` (nombre de la puerta), `{error}` (mensaje del
+servicio) y `{code}` (código de resultado).
 
 ## Aviso
 
